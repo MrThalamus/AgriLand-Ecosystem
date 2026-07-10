@@ -1,7 +1,16 @@
 <?php
-$scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+$scheme = (
+    (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+    || ($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https'
+) ? 'https' : 'http';
+
 $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
-$scriptDir = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '/public/index.php')), '/');
+
+$scriptDir = rtrim(
+    str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '/public/index.php')),
+    '/'
+);
+
 define('BASE_URL', $scheme . '://' . $host . $scriptDir);
 // Session start kora jate login info save thake
 session_start();
